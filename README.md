@@ -1,8 +1,8 @@
-# A Patch-based algorithm for high quality and diversity single Image Generation
+# A Patch-Based Algorithm for Diverse and High Fidelity Single Image Generation
 
 This is the official implementation for our paper presented at ICIP 2022:
 
-**A Patch-based algorithm for high quality and diversity single Image Generation**  
+**A Patch-Based Algorithm for Diverse and High Fidelity Single Image Generation**  
 N. Cherel, A. Almansa, Y. Gousseau, A. Newson
 
 We present a pure patch-based solution to single image generation that does not require learning.
