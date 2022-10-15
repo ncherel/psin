@@ -11,4 +11,4 @@ BETA = 5
 MAX_ITER = 10
 RESIDUAL_THRESH = 1e-4
 
-USE_CPP = True
+USE_CPP = False
