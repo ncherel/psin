@@ -8,6 +8,9 @@ N. Cherel, A. Almansa, Y. Gousseau, A. Newson
 We present a pure patch-based solution to single image generation that does not require learning.
 As a result new samples are possible using this code in a few seconds.
 
+This algorithm contains the code for our **PSin** algorithm only.  
+The reference code for the optimal transport initialization is found at optimization https://github.com/ahoudard/wgenpatex . Our fork with minor modifications will be released soon.
+
 Reference | Generated
 :--------:|:---------:
 ![Reference Image](balloons.png) | ![Algorithm output](output.png)
