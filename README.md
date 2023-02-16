@@ -5,6 +5,8 @@ This is the official implementation for our paper presented at ICIP 2022:
 **A Patch-Based Algorithm for Diverse and High Fidelity Single Image Generation**  
 N. Cherel, A. Almansa, Y. Gousseau, A. Newson
 
+Link to [[Preprint]](https://hal.science/hal-03822204/) [[Paper]](https://ieeexplore.ieee.org/document/9897913)
+
 We present a pure patch-based solution to single image generation that does not require learning.
 As a result new samples are possible using this code in a few seconds.
 
