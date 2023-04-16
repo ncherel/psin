@@ -72,7 +72,7 @@ def propagation(shift_map, img1, img2, iteration_nb):
         irange = range(img1.shape[0]-1, -1, -1)
         jrange = range(img1.shape[1]-1, -1, -1)
 
-    for i in jrange:
+    for i in irange:
         for j in jrange:
             if not is_in_inner_boundaries(img1, i, j):
                 continue
