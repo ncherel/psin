@@ -51,7 +51,8 @@ def generate(src, name=None,init=None, nb_levels=3, output=".",shape=None):
             target_pyramid = get_pyramid(img, nb_levels=nb_levels)
             img, shift_map = initialisation(src_pyramid[-1], patch_match_params,shape=target_pyramid[-1].shape[:2])
         else:
-            img, shift_map = initialisation(src_pyramid[-1], patch_match_params,shape=shape)
+            target_pyramid = src_pyramid
+            img, shift_map = initialisation(src_pyramid[-1], patch_match_params)
     print("Done")
 
     for level in reversed(range(nb_levels)):
@@ -79,5 +80,5 @@ def generate(src, name=None,init=None, nb_levels=3, output=".",shape=None):
 
 if __name__ == '__main__':
     src = cv2.imread("balloons.png").astype(np.float32) / 255.0
-    generate(src, name='balloons',nb_levels=4,shape=[512,512])
+    generate(src, name='balloons',nb_levels=4,shape=(256,256))
 
