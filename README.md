@@ -1,6 +1,6 @@
 # A Patch-Based Algorithm for Diverse and High Fidelity Single Image Generation
 
-This is the official implementation for our paper presented at ICIP 2022:
+This is a fork for proposed modifications of the official implementation for the paper presented at ICIP 2022:
 
 **A Patch-Based Algorithm for Diverse and High Fidelity Single Image Generation**  
 N. Cherel, A. Almansa, Y. Gousseau, A. Newson
