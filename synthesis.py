@@ -54,18 +54,19 @@ def generate(src, name=None,init=None, nb_levels=3, output=".",shape=None):
             target_pyramid = src_pyramid
             img, shift_map = initialisation(src_pyramid[-1], patch_match_params)
     print("Done")
-
     for level in reversed(range(nb_levels)):
         print(f"Level {level}...", end=" ", flush=True)
         src = src_pyramid[level]
 
         # Interpolate the shift volume and reconstruct at this level
         if level != (nb_levels - 1):
-            shift_map = interpolate_shift_map(shift_map, target_pyramid[level].shape[:2])
+            shift_map = interpolate_shift_map(shift_map, target_pyramid[level].shape[:2],src.shape[:2])
             img = reconstruct(src, shift_map, method="weighted")
+
         iteration_nb = 1
         residual = float("inf")
         while iteration_nb <= MAX_ITER and residual > RESIDUAL_THRESH:
+
             previous_img = img.copy()
 
             shift_map = patch_match(img, src, shift_map, patch_match_params)
@@ -78,7 +79,7 @@ def generate(src, name=None,init=None, nb_levels=3, output=".",shape=None):
         cv2.imwrite(join(output, f"{name}_iter_{level}.png"), img[..., :3] * 255)
 
 
+
 if __name__ == '__main__':
     src = cv2.imread("balloons.png").astype(np.float32) / 255.0
-    generate(src, name='balloons',nb_levels=4,shape=(256,256))
-
+    generate(src,name='balloons',nb_levels=4,shape=[256,256])

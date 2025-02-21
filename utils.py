@@ -59,7 +59,7 @@ def nclip(low, a, high):
 
 
 @njit
-def interpolate_shift_map(shift_map_in, shape):
+def interpolate_shift_map(shift_map_in, shape,shape_src):
     """Interpolate the shift map with economy of memory and speed
     Only interpolate for the valid patches [H_PATCH_SIZE, -H_PATCH_SIZE]
     """
@@ -79,8 +79,8 @@ def interpolate_shift_map(shift_map_in, shape):
             ii = int(np.round(cy * i) + a)
             jj = int(np.round(cx * j) + a)
 
-            shift_map_out[i, j, 0] = nclip(H_PATCH_SIZE - i, 2 * shift_map_in[ii, jj, 0], shape[0] - 1 - H_PATCH_SIZE - i)
-            shift_map_out[i, j, 1] = nclip(H_PATCH_SIZE - j, 2 * shift_map_in[ii, jj, 1], shape[1] - 1 - H_PATCH_SIZE - j)
+            shift_map_out[i, j, 0] = nclip(H_PATCH_SIZE - i, 2 * shift_map_in[ii, jj, 0], shape_src[0] - 1 - H_PATCH_SIZE - i)
+            shift_map_out[i, j, 1] = nclip(H_PATCH_SIZE - j, 2 * shift_map_in[ii, jj, 1], shape_src[1] - 1 - H_PATCH_SIZE - j)
             shift_map_out[i, j, 2] = shift_map_in[ii, jj, 2]
 
     return shift_map_out
