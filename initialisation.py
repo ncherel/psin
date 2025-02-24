@@ -21,9 +21,14 @@ def get_texture(img):
     return np.stack((gy, gx), axis=-1)
 
 
-def initialisation(src, patch_match_params):
-    img = np.random.randn(src.shape[0], src.shape[1], 3).astype(np.float32) + 0.5
-    shift_map = 10000 * np.ones((src.shape[0], src.shape[1], 3), dtype=np.float32)
+def initialisation(src, patch_match_params,shape=None):
+    if shape is  None:
+        img = np.random.randn(src.shape[0], src.shape[1], 3).astype(np.float32) + 0.5
+        shift_map = 10000 * np.ones((src.shape[0], src.shape[1], 3), dtype=np.float32)
+    else:
+        img = np.random.randn(shape[0], shape[1], 3).astype(np.float32) + 0.5
+        shift_map = 10000 * np.ones((shape[0], shape[1], 3), dtype=np.float32)
+    
 
     no_texture_src = np.copy(src[..., :3])
 
