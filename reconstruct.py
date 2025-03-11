@@ -1,6 +1,6 @@
 import numpy as np
 
-from numba import njit
+from numba import njit, prange
 
 from config import PATCH_SIZE, H_PATCH_SIZE
 from utils import is_in_inner_boundaries
@@ -57,12 +57,12 @@ def best_patch_reconstruction(src, shift_map):
     return img
 
 
-@njit
+@njit(parallel=True)
 def weighted_reconstruction(src, shift_map):
     """Compute a weighted average of the patches"""
     img = np.zeros((shift_map.shape[0], shift_map.shape[1], src.shape[2]), dtype=src.dtype)
-    for i in range(img.shape[0]):
-        for j in range(img.shape[1]):
+    for i in prange(img.shape[0]):
+        for j in prange(img.shape[1]):
             weights = -1.0 * np.ones((PATCH_SIZE, PATCH_SIZE), dtype=np.float32)
 
             i_min = max(i - H_PATCH_SIZE, 0)

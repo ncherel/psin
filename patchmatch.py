@@ -1,7 +1,7 @@
 import numpy as np
 
 from numpy.random import randint
-from numba import njit
+from numba import njit, prange
 
 from utils import is_in_inner_boundaries, is_same_shift
 from patch_measure import patch_measure, calculate_patch_distance
@@ -38,13 +38,13 @@ def patch_match(img1, img2, first_guess, params):
     return shift_map
 
 
-@njit
+@njit(parallel=True)
 def initialise_shift_map(shift_map, img1, img2):
     """Initialise the shift map by sampling valid coordinates. If the
     existing shift is valid, update the distance.
     """
-    for i in range(img1.shape[0]):
-        for j in range(img1.shape[1]):
+    for i in prange(img1.shape[0]):
+        for j in prange(img1.shape[1]):
             if not is_in_inner_boundaries(img1, i, j):
                 continue
             y_shift = int(shift_map[i, j, 0])
@@ -54,7 +54,8 @@ def initialise_shift_map(shift_map, img1, img2):
                 y_shift = randint(H_PATCH_SIZE, img2.shape[0] - H_PATCH_SIZE) - i
                 x_shift = randint(H_PATCH_SIZE, img2.shape[1] - H_PATCH_SIZE) - j
 
-            shift_map[i, j, :2] = (y_shift, x_shift)
+            shift_map[i, j, 0] = float(y_shift)
+            shift_map[i, j, 1] = float(x_shift)
             shift_map[i, j, 2] = calculate_patch_distance(img1, img2, shift_map, i, j)
 
     return shift_map
@@ -110,7 +111,7 @@ def propagation(shift_map, img1, img2, iteration_nb):
                 shift_map[i, j, 2] = current_distance
 
 
-@njit
+@njit(parallel=True)
 def random_search(shift_map, img1, img2, max_window, alpha):
     """Randomly search around each match to find better matches"""
     max_window = min(max_window, max(img2.shape[:-1]))
@@ -120,16 +121,18 @@ def random_search(shift_map, img1, img2, max_window, alpha):
     for exponent in range(max_exponent):
         windows[exponent] = max_window * np.power(alpha, exponent)
 
-    for i in range(img1.shape[0]):
-        for j in range(img1.shape[1]):
+    for i in prange(img1.shape[0]):
+        for j in prange(img1.shape[1]):
             if not is_in_inner_boundaries(img1, i, j):
                 continue
 
-            current_shift = shift_map[i, j, :2]
+            current_shift_x = int(shift_map[i, j, 0])
+            current_shift_y = int(shift_map[i, j, 1])
+            current_shift = [current_shift_x, current_shift_y]
             current_distance = shift_map[i, j, 2]
 
-            y_match = i + int(shift_map[i, j, 0])
-            x_match = j + int(shift_map[i, j, 1])
+            y_match = i + current_shift_x
+            x_match = j + current_shift_y
 
             for window in windows:
                 y_rand = sample_around(y_match, window, H_PATCH_SIZE, img2.shape[0] - H_PATCH_SIZE)
@@ -151,5 +154,6 @@ def random_search(shift_map, img1, img2, max_window, alpha):
                     current_distance = distance
 
             if current_distance < shift_map[i, j, 2]:
-                shift_map[i, j, :2] = current_shift
+                shift_map[i, j, 0] = float(current_shift[0])
+                shift_map[i, j, 1] = float(current_shift[1])
                 shift_map[i, j, 2] = current_distance
